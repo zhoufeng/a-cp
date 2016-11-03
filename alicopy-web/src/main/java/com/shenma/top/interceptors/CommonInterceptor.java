@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.shenma.top.imagecopy.util.Constant;
+import com.shenma.alicopy.util.Constant;
 
 
 @Controller

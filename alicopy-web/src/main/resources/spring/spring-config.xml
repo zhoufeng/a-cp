@@ -32,7 +32,7 @@
 		</context:component-scan>
 		<context:component-scan base-package="com.bohusoft.alicopy"></context:component-scan>
 			
-		<bean id="propertyConfigurer" class="com.shenma.top.imagecopy.util.CustomerPropertyPlaceholderConfigurer">
+		<bean id="propertyConfigurer" class="com.shenma.alicopy.util.CustomerPropertyPlaceholderConfigurer">
 		    <property name="locations">  
 		        <list>
 		            <value>classpath:config.properties</value>

@@ -1,12 +1,14 @@
 package com.bohusoft.alicopy.save;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.shenma.alicopy.dao.OwnCatInfoDao;
+import com.shenma.alicopy.dao.OwnCatInfoItemDao;
+import com.shenma.alicopy.ecxeption.CopyBussinessException;
+import com.shenma.alicopy.entity.OwnCatInfo;
+import com.shenma.alicopy.entity.OwnCatInfoItem;
+import com.shenma.alicopy.parse.DetailHtmlParseBean;
+import com.shenma.alicopy.parse.DetailHtmlParseUtil;
+import com.shenma.aliutil.entity.goods.Offer;
+import com.shenma.common.util.JacksonJsonMapper;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -15,15 +17,12 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bohusoft.alicopy.parse.DetailHtmlParseBean;
-import com.bohusoft.alicopy.parse.DetailHtmlParseUtil;
-import com.shenma.aliutil.entity.goods.Offer;
-import com.shenma.top.imagecopy.dao.OwnCatInfoDao;
-import com.shenma.top.imagecopy.dao.OwnCatInfoItemDao;
-import com.shenma.top.imagecopy.ecxeption.CopyBussinessException;
-import com.shenma.top.imagecopy.entity.OwnCatInfo;
-import com.shenma.top.imagecopy.entity.OwnCatInfoItem;
-import com.shenma.top.imagecopy.util.JacksonJsonMapper;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class OfferPublishService {
@@ -132,7 +131,7 @@ public class OfferPublishService {
 	private void setBaseProperties(Offer offer,DetailHtmlParseBean bean) throws JsonParseException, JsonMappingException, IOException{
 		Map<String,String> attributesMap=bean.getBaseproperties();   //采集过来的属性，属性值
 		OwnCatInfo catInfo = ownCatInfoDao.findByCatsId(bean.getCatsId());
-		Map<String,Object> properties=JacksonJsonMapper.getInstance().readValue(catInfo.getProperties(), HashMap.class);
+		Map<String,Object> properties= JacksonJsonMapper.getInstance().readValue(catInfo.getProperties(), HashMap.class);
 		Map<String, String> productFeatures = offer.getProductFeatures(); // 最后保存到offer的属性.
 		
 		List<Map<String, Object>> productFeatureList = (List<Map<String, Object>>) properties.get("productFeatureList");
@@ -242,7 +241,7 @@ public class OfferPublishService {
 	private void dealSecOrThirdCate(Integer catsId, Map<String, Object> productFeature,
 			String value, Map<String, String> attributesMap,
 			Map<String, String> saveMap, String pathValues,Map<String, Map<String, Object>> baseMap,Map<String, Map<String, Object>> specAttrMap)
-			throws JsonParseException, JsonMappingException, IOException {
+			throws  IOException {
 		String fid = productFeature.get("fid").toString();
 		List<Integer> childrenFids = (List<Integer>) productFeature.get("childrenFids");
 		List<Map<String, Object>> featureIdValues = (List<Map<String, Object>>) productFeature.get("featureIdValues");

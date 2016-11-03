@@ -16,7 +16,15 @@
       <module>bohu-commonutil</module>
   </modules>
 
-
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.shenma.common</groupId>
+            <artifactId>bohu-commonutil</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
 
 
 

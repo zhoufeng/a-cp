@@ -1,24 +1,18 @@
 package com.shenma.top.imagecopy.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.ObjectFactory;
+import com.shenma.alicopy.dao.SaveTaskDao;
+import com.shenma.alicopy.service.AliForeBackSevice;
+import com.shenma.alicopy.service.TaobaoForeBackService;
+import com.shenma.alicopy.util.prase.cate.AliBaBaBusseness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.shenma.top.imagecopy.dao.SaveTaskDao;
-import com.shenma.top.imagecopy.service.AliForeBackSevice;
-import com.shenma.top.imagecopy.service.TaobaoForeBackService;
-import com.shenma.top.imagecopy.util.RunningTaskManager;
-import com.shenma.top.imagecopy.util.bean.RunningTask;
-import com.shenma.top.imagecopy.util.prase.cate.AliBaBaBusseness;
-import com.taobao.api.ApiException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/top/finalproductcopy")
@@ -39,11 +33,10 @@ public class ProductCopyFinalController {
 	 * 阿里巴巴单个复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/saveAliItem")
 	@ResponseBody
-	public Map<String,Object> saveAliItem(@RequestBody Map<String,Object> variables) throws ApiException{
+	public Map<String,Object> saveAliItem(@RequestBody Map<String,Object> variables){
 		return aliForeBackSevice.saveAliItem(variables,false);
 	}
 
@@ -52,11 +45,10 @@ public class ProductCopyFinalController {
 	 * 阿里巴巴批量复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/batchSaveAliItem")
 	@ResponseBody
-	public List<Map<String,Object>> batchSaveAliItem(@RequestBody Map<String,Object> variables) throws ApiException{
+	public List<Map<String,Object>> batchSaveAliItem(@RequestBody Map<String,Object> variables){
 		String[] urlsList=variables.get("urls").toString().split("");
 		List<Map<String,Object>> retList=new ArrayList<Map<String, Object>>();
 		for(String url:urlsList){
@@ -72,11 +64,10 @@ public class ProductCopyFinalController {
 	 * 淘宝单个复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/saveTaobaoItem")
 	@ResponseBody 
-	public Map<String,Object> saveTaobaoItem(@RequestBody Map<String,Object> variables) throws ApiException{
+	public Map<String,Object> saveTaobaoItem(@RequestBody Map<String,Object> variables){
 		return taobaoForeBackService.saveTaobaoItem(variables,false);
 	}
 	
@@ -84,12 +75,11 @@ public class ProductCopyFinalController {
 	 * 阿里巴巴多选复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/saveAliItemList")
 	@ResponseBody 
-	public List<Map<String,Object>> saveAliItemList(@RequestBody Map<String,Object> variables) throws ApiException{
+	public List<Map<String,Object>> saveAliItemList(@RequestBody Map<String,Object> variables){
 		List<Map<String,Object>> retList=new ArrayList<Map<String,Object>>();
 		List<String> urlList=(List<String>) variables.get("urlList");
 		Map<String,Object> params=(Map<String, Object>) variables.get("params");
@@ -117,13 +107,12 @@ public class ProductCopyFinalController {
 	 * 阿里巴巴类目复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/saveAliCateList")
 	@ResponseBody 
-	public List<Map<String,Object>> saveAliCateList(@RequestBody Map<String,Object> variables) throws ApiException, InterruptedException{
+	public List<Map<String,Object>> saveAliCateList(@RequestBody Map<String,Object> variables) throws  InterruptedException{
 		List<Map<String,Object>> retList=new ArrayList<Map<String,Object>>();
 		Map<String,Object> params=(Map<String, Object>) variables.get("params");
 		String cateUrl=(String) variables.get("cateUrl");
@@ -154,12 +143,11 @@ public class ProductCopyFinalController {
 	 * 淘宝多选复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
 	 */
 	@SuppressWarnings({ "unchecked" })
 	@RequestMapping(value="/saveTaobaoItemList")
 	@ResponseBody 
-	public List<Map<String,Object>> saveTaobaoItemList(@RequestBody Map<String,Object> variables) throws ApiException{
+	public List<Map<String,Object>> saveTaobaoItemList(@RequestBody Map<String,Object> variables){
 		List<Map<String,Object>> retList=new ArrayList<Map<String,Object>>();
 		String msg=null;
 		List<String> urlList=(List<String>) variables.get("urlList");

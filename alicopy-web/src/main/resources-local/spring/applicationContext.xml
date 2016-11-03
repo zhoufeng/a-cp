@@ -30,7 +30,7 @@
 		</mvc:message-converters>
 
 	</mvc:annotation-driven>
-	<bean id="customObjectMapper" class="com.shenma.top.imagecopy.util.CustomObjectMapper"></bean>
+	<bean id="customObjectMapper" class="com.shenma.alicopy.util.CustomObjectMapper"></bean>
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />

@@ -20,7 +20,7 @@ import com.shenma.aliutil.service.AliToken;
 import com.shenma.aliutil.service.AlibabaRequestService;
 import com.shenma.aliutil.util.AliConstant;
 import com.shenma.aliutil.util.SessionUtil;
-import com.shenma.top.imagecopy.util.ProxyLocalRequestUtil;
+import com.shenma.alicopy.util.ProxyLocalRequestUtil;
 
 
 @Controller

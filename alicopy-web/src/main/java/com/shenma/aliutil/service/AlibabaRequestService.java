@@ -29,7 +29,7 @@ import com.shenma.aliutil.util.AlibabaFactory;
 import com.shenma.aliutil.util.HttpOpenClient;
 import com.shenma.aliutil.util.SessionUtil;
 import com.shenma.aliutil.util.memcache.MemCachedUtil;
-import com.shenma.top.imagecopy.util.ProxyLocalRequestUtil;
+import com.shenma.alicopy.util.ProxyLocalRequestUtil;
 
 @Component
 public class AlibabaRequestService {

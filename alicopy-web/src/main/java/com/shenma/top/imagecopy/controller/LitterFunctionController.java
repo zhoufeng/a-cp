@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.shenma.aliutil.entity.goods.OfferDetailInfo;
 import com.shenma.aliutil.exception.AliReqException;
-import com.shenma.top.imagecopy.service.LitterFunService;
+import com.shenma.alicopy.service.LitterFunService;
 
 @Controller
 @RequestMapping("/litterfun")

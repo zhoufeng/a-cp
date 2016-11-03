@@ -1,34 +1,27 @@
 package com.shenma.top.imagecopy.controller.alimanager;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.aliutil.entity.goods.OfferDetailInfo;
+import com.shenma.aliutil.exception.AliReqException;
+import com.shenma.aliutil.service.GoodsService;
+import com.shenma.aliutil.service.SelfCatService;
+import com.shenma.aliutil.util.AliPage;
+import com.shenma.common.util.JacksonJsonMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shenma.aliutil.entity.goods.OfferDetailInfo;
-import com.shenma.aliutil.exception.AliReqException;
-import com.shenma.aliutil.service.GoodsService;
-import com.shenma.aliutil.service.SelfCatService;
-import com.shenma.aliutil.util.AliPage;
-import com.shenma.top.imagecopy.util.JacksonJsonMapper;
-import com.taobao.api.ApiException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -42,11 +35,11 @@ public class TitleContorller {
 	private GoodsService goodsService;
 	
 	@RequestMapping(value="",method=RequestMethod.GET)
-	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) throws ApiException, AliReqException, JsonGenerationException, JsonMappingException, IOException{
+	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) throws  AliReqException, JsonGenerationException, JsonMappingException, IOException{
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "alimanager/title.jsp");
 		Map<String,Object> cates=selfCatService.getAllCate();
-		String catesStr=JacksonJsonMapper.getInstance().writeValueAsString(cates);
+		String catesStr= JacksonJsonMapper.getInstance().writeValueAsString(cates);
 		model.put("cates", catesStr);
 		return new ModelAndView("aceadmin/indexcopy",model);
 	}
@@ -71,7 +64,7 @@ public class TitleContorller {
 	
 	@RequestMapping(value="/saveByIds")
 	@ResponseBody
-	public String svaeByIds(@RequestBody Map<String,Object> variables) throws ApiException{
+	public String svaeByIds(@RequestBody Map<String,Object> variables) {
 		List<Map<String,Object>> list=(List<Map<String, Object>>) variables.get("urlList");
 		StringBuffer offers=new StringBuffer();
 		StringBuffer subjects=new StringBuffer();

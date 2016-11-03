@@ -33,7 +33,7 @@
 	    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 	        <property name="dataSource" ref="dataSource"/>
 	        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
-	        <property name="packagesToScan" value="com.shenma.top.imagecopy.entity"/>
+	        <property name="packagesToScan" value="com.shenma.alicopy.entity"/>
 	        <property name="jpaProperties">
 	            <props>
 	                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
@@ -52,10 +52,10 @@
 	        <property name="entityManagerFactory" ref="entityManagerFactory"/>
 	    </bean>    
 	    <!-- Spring Data Jpa配置 -->
-	   <!--  <jpa:repositories base-package="com.shenma.top.imagecopy.dao" transaction-manager-ref="transactionManagerJPA" entity-manager-factory-ref="entityManagerFactory">
+	   <!--  <jpa:repositories base-package="com.shenma.alicopy.service.dao" transaction-manager-ref="transactionManagerJPA" entity-manager-factory-ref="entityManagerFactory">
 	        
 	    </jpa:repositories> -->
-	    <jpa:repositories base-package="com.shenma.top.imagecopy.dao" transaction-manager-ref="transactionManagerJPA" entity-manager-factory-ref="entityManagerFactory" ></jpa:repositories>
+	    <jpa:repositories base-package="com.shenma.alicopy.dao" transaction-manager-ref="transactionManagerJPA" entity-manager-factory-ref="entityManagerFactory" ></jpa:repositories>
 	     <!-- 使用annotation定义事务 -->
 	    <tx:annotation-driven transaction-manager="transactionManagerJPA"/>
 		

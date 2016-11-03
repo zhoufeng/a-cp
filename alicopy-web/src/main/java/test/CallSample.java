@@ -5,8 +5,8 @@ import java.util.concurrent.Callable;
 
 import org.jsoup.nodes.Document;
 
-import com.shenma.top.imagecopy.util.BaseHttpClient;
-import com.shenma.top.imagecopy.util.JsonpUtil;
+import com.shenma.alicopy.util.BaseHttpClient;
+import com.shenma.alicopy.util.JsonpUtil;
 
 public class CallSample implements Callable<String> {
 	private ThreadLocal<Integer> count=new ThreadLocal<Integer>();

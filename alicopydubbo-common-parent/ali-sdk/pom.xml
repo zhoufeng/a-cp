@@ -35,8 +35,7 @@
 
 		<dependency>
 			<groupId>com.shenma.common</groupId>
-			<artifactId>commonutil</artifactId>
-			<version>0.0.1-RELEASE</version>
+			<artifactId>bohu-commonutil</artifactId>
 		</dependency>
 
 		<dependency>

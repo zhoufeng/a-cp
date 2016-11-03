@@ -1,12 +1,13 @@
 package com.shenma.top.imagecopy.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.alicopy.service.CommonImageService;
+import com.shenma.alicopy.util.bean.ImageBean;
+import com.shenma.alicopy.util.bean.ImageVoBean;
+import com.shenma.alicopy.util.exception.BusinessException;
+import com.shenma.aliutil.entity.album.Album;
+import com.shenma.aliutil.exception.AliReqException;
+import com.shenma.aliutil.service.AlbumService;
+import com.shenma.common.util.ImageUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shenma.aliutil.entity.album.Album;
-import com.shenma.aliutil.exception.AliReqException;
-import com.shenma.aliutil.service.AlbumService;
-import com.shenma.common.util.ImageUtil;
-import com.shenma.top.imagecopy.service.CommonImageService;
-import com.shenma.top.imagecopy.util.bean.ImageBean;
-import com.shenma.top.imagecopy.util.bean.ImageVoBean;
-import com.taobao.api.ApiException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/top/imagecopy")
@@ -35,7 +33,7 @@ public class ImageCopyController {
     private AlbumService albumService;
 	
 	@RequestMapping(value="",method=RequestMethod.GET)
-	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView index(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/imageIndex.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -43,7 +41,7 @@ public class ImageCopyController {
 	
 	@RequestMapping(value="/search")
 	@ResponseBody
-	public ImageBean<ImageVoBean> list(@RequestParam("url") String url) throws ApiException{
+	public ImageBean<ImageVoBean> list(@RequestParam("url") String url) {
 		ImageBean<ImageVoBean> bean=commonImageService.parseUrl(url);
 		return bean;
 	}
@@ -58,10 +56,10 @@ public class ImageCopyController {
 			byte[] imgByte=ImageUtil.readUrlImage(url);
 			long maxSize=(2<<16)*30;
 			if(imgByte.length>maxSize){
-				throw new ApiException("文件超过3M");
+				throw new BusinessException("文件超过3M");
 			}
 			bean=albumService.uploadImage(pictureCategoryId.toString(), fileName, null, imgByte);
-		} catch (ApiException e) {
+		} catch (BusinessException e) {
 			logger.error("淘宝图片上传失败", e);
 		} catch (AliReqException e) {
 			logger.error("淘宝图片上传失败", e);

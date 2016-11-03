@@ -1,15 +1,19 @@
 package com.shenma.top.imagecopy.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.alicopy.dao.OwnCatInfoDao;
+import com.shenma.alicopy.entity.OwnCatInfo;
+import com.shenma.alicopy.service.AliBaBaSaveService;
+import com.shenma.alicopy.util.AliCateAuto2Util;
+import com.shenma.alicopy.util.AliCateListAutoUtil;
+import com.shenma.alicopy.util.TaobaoCateUtil;
+import com.shenma.aliutil.entity.platform.IsvOrderItemDto;
+import com.shenma.aliutil.exception.AliReqException;
+import com.shenma.aliutil.service.PlatformService;
+import com.shenma.common.util.JacksonJsonMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,20 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shenma.aliutil.entity.platform.IsvOrderItemDto;
-import com.shenma.aliutil.exception.AliReqException;
-import com.shenma.aliutil.service.PlatformService;
-import com.shenma.top.imagecopy.dao.OwnCatInfoDao;
-import com.shenma.top.imagecopy.entity.OwnCatInfo;
-import com.shenma.top.imagecopy.service.AliBaBaSaveService;
-import com.shenma.top.imagecopy.util.AliCateAuto2Util;
-import com.shenma.top.imagecopy.util.AliCateListAutoUtil;
-import com.shenma.top.imagecopy.util.JacksonJsonMapper;
-import com.shenma.top.imagecopy.util.TaobaoCateUtil;
-import com.taobao.api.ApiException;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/manager")
@@ -66,7 +62,7 @@ public class AdminController {
 		if(1==1){
 		String rootUrl="http://offer.1688.com/offer/asyn/category_selector.json?callback=jQuery172075146440915465_1423106686697&loginCheck=N&dealType=getSubCatInfo&categoryId=0&scene=offer";
 		String liststr=AliCateListAutoUtil.get(rootUrl, new HashMap(), "utf-8");
-		Map<String,Object> rootdata=JacksonJsonMapper.getInstance().readValue(AliCateListAutoUtil.getData(liststr),HashMap.class);
+		Map<String,Object> rootdata= JacksonJsonMapper.getInstance().readValue(AliCateListAutoUtil.getData(liststr),HashMap.class);
 		List<Map<String,Object>> rootlist=(List<Map<String, Object>>) rootdata.get("data");
 		for(Map<String,Object> rootCat:rootlist){
 			String sectUrl="http://offer.1688.com/offer/asyn/category_selector.json";
@@ -145,7 +141,8 @@ public class AdminController {
 	
 	/**
 	 * 跟新阿里登录的session.
-	 * @param catsId
+	 * @param cookieValue
+	 * @param csrfToken
 	 * @return
 	 * @throws IOException
 	 */
@@ -160,7 +157,7 @@ public class AdminController {
 	
 	
 	@RequestMapping(value="/order",method=RequestMethod.GET)
-	public ModelAndView history(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView history(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "alimanager/orderList.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -168,7 +165,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/changeTmailSearchUrl",method=RequestMethod.GET)
 	@ResponseBody
-	public String changeTmailSearchUrl(@RequestParam("url") String url ) throws ApiException{
+	public String changeTmailSearchUrl(@RequestParam("url") String url ){
 		TaobaoCateUtil.tmailSearchUrl=url;
 		return "success";
 	}

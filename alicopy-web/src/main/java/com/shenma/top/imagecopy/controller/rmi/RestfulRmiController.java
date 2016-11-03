@@ -1,18 +1,5 @@
 package com.shenma.top.imagecopy.controller.rmi;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.shenma.aliutil.exception.AliReqException;
 import com.shenma.aliutil.sdk.ali.auth.HostedAuthService;
 import com.shenma.aliutil.service.AliToken;
@@ -21,8 +8,18 @@ import com.shenma.aliutil.util.AliConstant;
 import com.shenma.aliutil.util.BeanUtil;
 import com.shenma.aliutil.util.SessionUtil;
 import com.shenma.aliutil.util.memcache.MemCachedUtil;
-import com.shenma.top.imagecopy.util.Constant;
-import com.taobao.api.ApiException;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/open/api")
@@ -44,7 +41,7 @@ public class RestfulRmiController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="")
 	@ResponseBody 
-	public Map<String,Object> opnapi(@RequestBody Map<String,Object> variables) throws ApiException, IllegalAccessException, InvocationTargetException{
+	public Map<String,Object> opnapi(@RequestBody Map<String,Object> variables) throws IllegalAccessException, InvocationTargetException{
 		Map<String,Object> ret=new HashMap<String,Object>();
 		try {
 		AliToken aliToken=BeanUtil.map2Bean((LinkedHashMap)variables.get(AliConstant.ali_info_name),AliToken.class);

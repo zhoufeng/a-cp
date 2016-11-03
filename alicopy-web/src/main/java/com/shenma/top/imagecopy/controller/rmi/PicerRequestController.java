@@ -1,15 +1,11 @@
 package com.shenma.top.imagecopy.controller.rmi;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.aliutil.service.AliToken;
+import com.shenma.aliutil.service.AlibabaRequestService;
+import com.shenma.aliutil.util.AliConstant;
+import com.shenma.aliutil.util.SessionUtil;
+import com.shenma.aliutil.util.memcache.MemCachedUtil;
 import net.rubyeye.xmemcached.exception.MemcachedException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shenma.aliutil.service.AliToken;
-import com.shenma.aliutil.service.AlibabaRequestService;
-import com.shenma.aliutil.util.AliConstant;
-import com.shenma.aliutil.util.SessionUtil;
-import com.shenma.aliutil.util.memcache.MemCachedUtil;
-import com.taobao.api.ApiException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 @Controller
 @RequestMapping("/picerrequest")
@@ -59,7 +55,7 @@ public class PicerRequestController {
 	}
 	
 	@RequestMapping(value="/imagecopy",method=RequestMethod.GET)
-	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView index(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "../copy/imageIndex.jsp");
 		return new ModelAndView("aceadmin/picerrequest/picerIndex",model);
@@ -70,17 +66,16 @@ public class PicerRequestController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/taobaocopy",method=RequestMethod.GET)
-	public ModelAndView taobaocopy(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView taobaocopy(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "../copy/taobao/oneproduct.jsp");
 		return new ModelAndView("aceadmin/picerrequest/picerIndex",model);
 	}
 	
 	@RequestMapping(value="/history",method=RequestMethod.GET)
-	public ModelAndView history(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView history(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "../copy/history.jsp");
 		return new ModelAndView("aceadmin/picerrequest/picerIndex",model);

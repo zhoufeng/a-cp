@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.shenma.top.imagecopy.dao.OwnCatInfoDao;
-import com.shenma.top.imagecopy.entity.OwnCatInfo;
+import com.shenma.alicopy.dao.OwnCatInfoDao;
+import com.shenma.alicopy.entity.OwnCatInfo;
 
 @Controller
 @RequestMapping("/webkitrequest")

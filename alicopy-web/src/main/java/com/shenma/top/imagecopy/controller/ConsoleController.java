@@ -1,21 +1,17 @@
 package com.shenma.top.imagecopy.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.aliutil.util.AliConstant;
+import com.shenma.aliutil.util.memcache.MemCachedUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shenma.aliutil.service.AliToken;
-import com.shenma.aliutil.util.AliConstant;
-import com.shenma.aliutil.util.memcache.MemCachedUtil;
-import com.taobao.api.ApiException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/console")
@@ -59,7 +55,7 @@ public class ConsoleController {
 	}
 	
 	@RequestMapping(value="test",method=RequestMethod.GET)
-	public ModelAndView test(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView test(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/productIndex.jsp");
 		return new ModelAndView("aceadmin/test",model);

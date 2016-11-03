@@ -12,43 +12,43 @@
         <!--运行时请将方式一注释掉！ -->  
         <!-- 方式二：使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法-->  
         <!-- 定义目标bean和bean中的方法 -->
-        <bean id="SpringQtzJob" class="com.shenma.top.imagecopy.util.scheduling.KeepingAliHref"/>
+    <!--<bean id="SpringQtzJob" class="com.shenma.alicopy.util.scheduling.KeepingAliHref"/>
         <bean id="SpringQtzJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">
             <ref bean="SpringQtzJob"/>
         </property>
-        <property name="targetMethod">  <!-- 要执行的方法名称 -->
-            <value>execute</value>
-        </property>
-    </bean>
-    
-    
-  
-        <bean id="cateAutoJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject">
-            <ref bean="cateAutoJob"/>
-        </property>
-        <property name="targetMethod">  <!-- 要执行的方法名称 -->
+        <property name="targetMethod">  &lt;!&ndash; 要执行的方法名称 &ndash;&gt;
             <value>execute</value>
         </property>
     </bean>
 
-    <!-- ======================== 调度触发器 ======================== -->
+
+
+    <bean id="cateAutoJobMethod" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="cateAutoJob"/>
+        </property>
+        <property name="targetMethod">  &lt;!&ndash; 要执行的方法名称 &ndash;&gt;
+            <value>execute</value>
+        </property>
+    </bean>
+
+    &lt;!&ndash; ======================== 调度触发器 ======================== &ndash;&gt;
     <bean id="CronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="SpringQtzJobMethod"></property>
-        <!--  <property name="cronExpression" value="*/10 * * * * ?"></property>   -->
+        &lt;!&ndash;  <property name="cronExpression" value="*/10 * * * * ?"></property>   &ndash;&gt;
         <property name="cronExpression" value="0 */10 * * * ?"></property>
     </bean>
 
 <bean id="CateCronTriggerBean" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail" ref="cateAutoJobMethod"></property>
-        <!--  <property name="cronExpression" value="*/10 * * * * ?"></property>   -->
+        &lt;!&ndash;  <property name="cronExpression" value="*/10 * * * * ?"></property>   &ndash;&gt;
         <property name="cronExpression" value="0 0 3 * * ?"></property>
     </bean>
 
 
 
-    <!-- ======================== 调度工厂 ======================== -->
+    &lt;!&ndash; ======================== 调度工厂 ======================== &ndash;&gt;
     <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
@@ -56,5 +56,5 @@
                 <ref bean="CateCronTriggerBean" />
             </list>
         </property>
-    </bean>  
+    </bean>  -->
 </beans>

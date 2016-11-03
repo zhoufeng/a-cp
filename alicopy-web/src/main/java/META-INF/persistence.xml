@@ -9,9 +9,9 @@
 		<provider>
 			org.apache.openjpa.persistence.PersistenceProviderImpl
 		</provider>
-		<class>com.shenma.top.imagecopy.entity.OwnCatInfo</class>
-		<class>com.shenma.top.imagecopy.entity.OwnCatInfoItem</class>
-		<class>com.shenma.top.imagecopy.entity.CollectProduct</class>
+		<class>com.shenma.alicopy.entity.OwnCatInfo</class>
+		<class>com.shenma.alicopy.entity.OwnCatInfoItem</class>
+		<class>com.shenma.alicopy.entity.CollectProduct</class>
 		<properties>
 			<property name="openjpa.ConnectionDriverName"
 				value="com.mysql.jdbc.Driver" />

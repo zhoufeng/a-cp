@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.shenma.top.imagecopy.util.TaobaoCateUtil;
-import com.taobao.api.ApiException;
+import com.shenma.alicopy.util.TaobaoCateUtil;
 
 @Controller
 @RequestMapping("/tmail")
@@ -15,7 +14,7 @@ public class TmailSearchController {
 	private long startTime=0l;
 	@RequestMapping(value="/search",method=RequestMethod.POST)
 	@ResponseBody
-	public String search(@RequestParam("url") String url) throws ApiException, InterruptedException{
+	public String search(@RequestParam("url") String url) throws  InterruptedException{
 		return requestNwjsClient(url);
 	}
 	

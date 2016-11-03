@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.shenma.aliutil.service.AliToken;
 import com.shenma.aliutil.service.AlibabaRequestService;
 import com.shenma.aliutil.util.AliConstant;
-import com.shenma.top.imagecopy.dao.AuthorizationEntityDao;
+import com.shenma.alicopy.dao.AuthorizationEntityDao;
 
 
 @Controller

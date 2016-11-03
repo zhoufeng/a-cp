@@ -3,7 +3,7 @@ package test;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.shenma.top.imagecopy.util.BaseHttpClient;
+import com.shenma.alicopy.util.BaseHttpClient;
 
 public class Executor {
 	public static void main(String[] args) throws InterruptedException {

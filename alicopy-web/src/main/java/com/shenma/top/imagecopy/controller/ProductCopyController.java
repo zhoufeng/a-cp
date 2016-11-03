@@ -1,17 +1,30 @@
 package com.shenma.top.imagecopy.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.alicopy.dao.MqRecordDao;
+import com.shenma.alicopy.dao.MqRecordItemDao;
+import com.shenma.alicopy.dao.OwnCatInfoDao;
+import com.shenma.alicopy.dao.OwnCatInfoItemDao;
+import com.shenma.alicopy.ecxeption.DuplicateCopyException;
+import com.shenma.alicopy.entity.AliCopyConfig;
+import com.shenma.alicopy.entity.MqRecordItem;
+import com.shenma.alicopy.entity.OwnCatInfo;
+import com.shenma.alicopy.entity.OwnCatInfoItem;
+import com.shenma.alicopy.service.*;
+import com.shenma.alicopy.util.AliCateListAutoUtil;
+import com.shenma.alicopy.util.Constant;
+import com.shenma.alicopy.util.Item;
+import com.shenma.alicopy.util.SaveProcessMsgManager;
+import com.shenma.alicopy.util.bean.SearchVoBean;
+import com.shenma.alicopy.util.exception.BusinessException;
+import com.shenma.aliutil.entity.album.Album;
+import com.shenma.aliutil.entity.goods.Offer;
+import com.shenma.aliutil.entity.trade.DeliveryAddress;
+import com.shenma.aliutil.entity.wuliu.DeliveryTemplateDescn;
+import com.shenma.aliutil.exception.AliReqException;
+import com.shenma.aliutil.service.*;
+import com.shenma.aliutil.util.BeanUtil;
+import com.shenma.aliutil.util.SessionUtil;
+import com.shenma.common.util.JacksonJsonMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -21,55 +34,15 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.shenma.aliutil.entity.album.Album;
-import com.shenma.aliutil.entity.goods.Offer;
-import com.shenma.aliutil.entity.trade.DeliveryAddress;
-import com.shenma.aliutil.entity.wuliu.DeliveryTemplateDescn;
-import com.shenma.aliutil.exception.AliReqException;
-import com.shenma.aliutil.service.AlbumService;
-import com.shenma.aliutil.service.AliToken;
-import com.shenma.aliutil.service.CateService;
-import com.shenma.aliutil.service.GoodsService;
-import com.shenma.aliutil.service.SelfCatService;
-import com.shenma.aliutil.service.TradeService;
-import com.shenma.aliutil.service.WuliuService;
-import com.shenma.aliutil.util.BeanUtil;
-import com.shenma.aliutil.util.SessionUtil;
-import com.shenma.taobao.service.product.ItemService;
-import com.shenma.taobao.util.TopAccessToken;
-import com.shenma.top.imagecopy.dao.MqRecordDao;
-import com.shenma.top.imagecopy.dao.MqRecordItemDao;
-import com.shenma.top.imagecopy.dao.OwnCatInfoDao;
-import com.shenma.top.imagecopy.dao.OwnCatInfoItemDao;
-import com.shenma.top.imagecopy.ecxeption.DuplicateCopyException;
-import com.shenma.top.imagecopy.entity.AliCopyConfig;
-import com.shenma.top.imagecopy.entity.MqRecordItem;
-import com.shenma.top.imagecopy.entity.OwnCatInfo;
-import com.shenma.top.imagecopy.entity.OwnCatInfoItem;
-import com.shenma.top.imagecopy.service.ActiveMqService;
-import com.shenma.top.imagecopy.service.AliBaBaSaveService;
-import com.shenma.top.imagecopy.service.AliCopyConfigService;
-import com.shenma.top.imagecopy.service.AlibabafinalSaveService;
-import com.shenma.top.imagecopy.service.ProductCopyService;
-import com.shenma.top.imagecopy.service.TaobaoFinalSaveService;
-import com.shenma.top.imagecopy.service.TaobaoParseService;
-import com.shenma.top.imagecopy.util.AliCateListAutoUtil;
-import com.shenma.top.imagecopy.util.Constant;
-import com.shenma.top.imagecopy.util.JacksonJsonMapper;
-import com.shenma.top.imagecopy.util.SaveProcessMsgManager;
-import com.shenma.top.imagecopy.util.bean.SearchVoBean;
-import com.shenma.top.imagecopy.util.exception.BusinessException;
-import com.taobao.api.ApiException;
-import com.taobao.api.domain.Item;
-import com.taobao.api.response.ItemGetResponse;
-import com.taobao.api.response.ItemSkusGetResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 @Controller
 @RequestMapping("/top/productcopy")
@@ -78,11 +51,7 @@ public class ProductCopyController {
 	
 	@Autowired
 	private ProductCopyService copyService;
-	
-	@Autowired
-	private ItemService itemService;
-	
-	
+
 	@Autowired
 	private GoodsService goodsService;
 	
@@ -94,9 +63,7 @@ public class ProductCopyController {
 	
 	@Autowired
 	private AliBaBaSaveService testService;
-	
-	@Autowired
-	private ActiveMqService activeMqService;
+
 	
 	@Autowired
 	private MqRecordItemDao mqRecordItemDao;
@@ -132,7 +99,7 @@ public class ProductCopyController {
 	private AliCopyConfigService aliCopyConfigService;
 	
 	@RequestMapping(value="",method=RequestMethod.GET)
-	public ModelAndView index(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView index(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/productIndex.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -146,10 +113,9 @@ public class ProductCopyController {
 			bean=BeanUtil.map2Bean(variables, SearchVoBean.class);
 			copyService.searchByBean(bean);
 			
-		} catch (ApiException e1) {
+		} catch (BusinessException e1) {
 			logger.error("搜索店铺地址错误,地址为:"+bean.getUrl()+","+bean.getCateUrl(),e1);
-			bean.setErrorCode(e1.getErrCode());
-			bean.setErrorMsg(e1.getErrMsg());
+			bean.setErrorCode(e1.getCode());
 		}catch (Exception e) {
 			logger.error("搜索店铺地址错误,地址为:"+bean.getUrl()+","+bean.getCateUrl(),e);
 			bean.setErrorCode("2");
@@ -199,30 +165,12 @@ public class ProductCopyController {
 		return bean;
 	}
 	
-	@RequestMapping(value="/taobaoitem")
-	@ResponseBody 
-	public ItemGetResponse taobaoitem(@RequestParam("id") Long id) throws ApiException{
-		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("numIid", id);
-		TopAccessToken accessToken=null;
-		map.put("session",accessToken.getAccess_token());
-		map.put("fields","cid,seller_cids,props,pic_url,num,location,price,item_imgs,prop_imgs,detail_url,title,props_name,property_alias,input_pids,sku_properties,input_pids,input_str,skus");
-		ItemGetResponse itemRes=itemService.findByOne(map);
-		return itemRes;
-	}
-	
-	@RequestMapping(value="/sku")
-	@ResponseBody 
-	public ItemSkusGetResponse getSkuByNumIid(@RequestParam("id") Long id) throws ApiException{
-		TopAccessToken accessToken= null;
-		ItemSkusGetResponse itemRes=itemService.findsKusById(id, accessToken.getAccess_token());
-		return itemRes;
-	}
+
 	
 
 	@RequestMapping(value="/test")
 	@ResponseBody 
-	public void test3(HttpServletRequest request) throws ApiException, AliReqException, IOException{
+	public void test3(HttpServletRequest request) throws  AliReqException, IOException{
 		String param=request.getParameter("");
 		//aliBaBaSaveService.save("http://detail.1688.com/offer/42224365059.html");
 		/*for(OfferDetailInfo info:vo.getToReturn()){
@@ -235,14 +183,14 @@ public class ProductCopyController {
 	
 	
 	@RequestMapping(value="/one",method=RequestMethod.GET)
-	public ModelAndView one(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView one(HttpServletRequest request,HttpServletResponse response) {
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/oneproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
 	}
 	
 	@RequestMapping(value="/recopy",method=RequestMethod.GET)
-	public String recopy(@RequestParam("url") String url) throws ApiException{
+	public String recopy(@RequestParam("url") String url) {
 		String preUrl="";
 		if(url.contains("taobao.com")){
 			preUrl+="/top/productcopy/taobaocopy";
@@ -258,11 +206,10 @@ public class ProductCopyController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/saveProcessMsg",method=RequestMethod.GET)
 	@ResponseBody 
-	public Map<String,Integer> saveProcessMsg(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public Map<String,Integer> saveProcessMsg(HttpServletRequest request,HttpServletResponse response) {
 		Map<String,Integer> ret=new HashMap<String,Integer>(2);
 		String memberId=SessionUtil.getAliSession().getMemberId();
 		ret.put("total", SaveProcessMsgManager.getTotal(memberId));
@@ -272,7 +219,7 @@ public class ProductCopyController {
 	
 	@RequestMapping(value="/saveByUrl")
 	@ResponseBody 
-	public Map<String,Object> saveOneByUrl(@RequestBody Map<String,Object> variables) throws ApiException{
+	public Map<String,Object> saveOneByUrl(@RequestBody Map<String,Object> variables){
 		String url=(String) variables.get("url");
 		boolean picStatus=(boolean) variables.get("picStatus");
 		MqRecordItem mqItem=new MqRecordItem();
@@ -368,14 +315,14 @@ public class ProductCopyController {
 	}
 	
 	@RequestMapping(value="/cate",method=RequestMethod.GET)
-	public ModelAndView cate(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView cate(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/cateproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
 	}
 	@RequestMapping(value="/saveByCate")
 	@ResponseBody 
-	public List<Map<String,Object>> saveOneByCate(@RequestBody Map<String,Object> variables) throws ApiException{
+	public List<Map<String,Object>> saveOneByCate(@RequestBody Map<String,Object> variables) {
 		List<Map<String,Object>> ret=new ArrayList<Map<String,Object>>(2);
 		List<String> urlList=(List<String>) variables.get("urlList");
 		for(String url:urlList){
@@ -394,7 +341,7 @@ public class ProductCopyController {
 	}
 	
 	@RequestMapping(value="/all",method=RequestMethod.GET)
-	public ModelAndView all(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView all(HttpServletRequest request,HttpServletResponse response) {
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/allproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -402,7 +349,7 @@ public class ProductCopyController {
 	
 	@RequestMapping(value="/saveAll")
 	@ResponseBody 
-	public String saveAll(@RequestBody Map<String,Object> variables) throws ApiException, InterruptedException{
+	public String saveAll(@RequestBody Map<String,Object> variables) throws InterruptedException{
 		String url=(String) variables.get("url");
 		if(url.indexOf("1688.com")>-1){
 			url=url.substring(0,url.indexOf("1688.com")+8);
@@ -435,7 +382,7 @@ public class ProductCopyController {
 	
 	
 	@RequestMapping(value="/history",method=RequestMethod.GET)
-	public ModelAndView history(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView history(HttpServletRequest request,HttpServletResponse response) {
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/history.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -443,7 +390,7 @@ public class ProductCopyController {
 	
 	@RequestMapping(value="/mqRecordList")
 	@ResponseBody 
-	public Page<MqRecordItem> mqRecordList(@RequestParam("pageNo") Integer pageNo,@RequestParam("status") Integer status) throws ApiException{
+	public Page<MqRecordItem> mqRecordList(@RequestParam("pageNo") Integer pageNo,@RequestParam("status") Integer status) {
 		Page<MqRecordItem> ret=testService.MqRecordItemList(pageNo, 20, SessionUtil.getAliSession().getMemberId(),status);
 		/*try {
 			aliBaBaSaveService.genCatesToDb();
@@ -456,7 +403,7 @@ public class ProductCopyController {
 	}
 	@RequestMapping(value="/delhistory")
 	@ResponseBody 
-	public String delhistory(@RequestBody Map<String,Object> variables) throws ApiException{
+	public String delhistory(@RequestBody Map<String,Object> variables) {
 		List<String> ids=(List<String>) variables.get("ids");
 		List<Integer> idsIn=new ArrayList<Integer>();
 		for(String i:ids){
@@ -472,10 +419,9 @@ public class ProductCopyController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/taobaocopy",method=RequestMethod.GET)
-	public ModelAndView copytaobaoToaliIndex(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView copytaobaoToaliIndex(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/taobao/oneproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -486,10 +432,9 @@ public class ProductCopyController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/batchtaobaocopy",method=RequestMethod.GET)
-	public ModelAndView batchtaobaocopy(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView batchtaobaocopy(HttpServletRequest request,HttpServletResponse response){
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/taobao/batchproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -500,10 +445,9 @@ public class ProductCopyController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/catetaobaocopy",method=RequestMethod.GET)
-	public ModelAndView copytaobaoToaliCateIndex(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView copytaobaoToaliCateIndex(HttpServletRequest request,HttpServletResponse response) {
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/taobao/cateproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -514,7 +458,6 @@ public class ProductCopyController {
 	 * 根据查询条件,请求类目列表
 	 * @param url
 	 * @return
-	 * @throws ApiException
 	 * @throws IOException 
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
@@ -522,7 +465,7 @@ public class ProductCopyController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/alicateList",method=RequestMethod.GET)
 	@ResponseBody 
-	public List<Map<String,Object>> alicateList(@RequestParam("url") String url) throws ApiException, JsonParseException, JsonMappingException, IOException{
+	public List<Map<String,Object>> alicateList(@RequestParam("url") String url) throws JsonParseException, JsonMappingException, IOException{
 		String liststr=AliCateListAutoUtil.get(url, new HashMap(), "gbk");
 		Map<String,Object> rootdata=JacksonJsonMapper.getInstance().readValue(AliCateListAutoUtil.getData(liststr),HashMap.class);
 		List<Map<String,Object>> catelist=(List<Map<String, Object>>) rootdata.get("data");
@@ -531,9 +474,7 @@ public class ProductCopyController {
 	
 	/**
 	 * 根据catid,请求产品属性和产品规格
-	 * @param url
 	 * @return
-	 * @throws ApiException
 	 * @throws IOException 
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
@@ -554,10 +495,8 @@ public class ProductCopyController {
 	
 	/**
 	 * 根据catid,请求产品属性和产品规格
-	 * @param url
 	 * @return
-	 * @throws ApiException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
@@ -663,11 +602,10 @@ public class ProductCopyController {
 	 * 淘宝批量复制,淘宝类目复制
 	 * @param variables
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/batchTaobaoAll")
 	@ResponseBody 
-	public List<Map<String,Object>> batchTaobaoAll(@RequestBody Map<String,Object> variables) throws ApiException{
+	public List<Map<String,Object>> batchTaobaoAll(@RequestBody Map<String,Object> variables) {
 		List<String> urlList=(List<String>) variables.get("urlList");
 		List<Map<String,Object>> retList=new ArrayList<Map<String,Object>>();
 		for(String url:urlList){
@@ -682,14 +620,10 @@ public class ProductCopyController {
 	
 	/**
 	 * 重新复制
-	 * @param url
-	 * @param picStatus
-	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/resave")
 	@ResponseBody 
-	public Map<String,Object> resave(@RequestParam("id") String id) throws ApiException{
+	public Map<String,Object> resave(@RequestParam("id") String id) {
 		
 		MqRecordItem mqItem=mqRecordItemDao.findOne(Integer.valueOf(id));
 		mqItem.setStatus(0);
@@ -737,14 +671,11 @@ public class ProductCopyController {
 	
 	/**
 	 * 反馈
-	 * @param url
-	 * @param picStatus
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value="/fankui")
 	@ResponseBody 
-	public String fankui(@RequestParam("id") String id) throws ApiException{
+	public String fankui(@RequestParam("id") String id) {
 		MqRecordItem mqItem=mqRecordItemDao.findOne(Integer.valueOf(id));
 		mqItem.setStatus(3);
 		mqRecordItemDao.saveAndFlush(mqItem);
@@ -760,7 +691,7 @@ public class ProductCopyController {
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/upfiletest")
 	@ResponseBody 
-	public String upifletest() throws ApiException, IOException, AliReqException{
+	public String upifletest() throws IOException, AliReqException{
 		List<Album> list=albumService.getAllAlbumList();
 		byte[] imageBytes=FileUtils.readFileToByteArray(new File("d:\\test1.gif"));
 		Map<String,Object> ret=albumService.uploadImage(list.get(0).getId(), "test123", "测试", imageBytes);
@@ -771,37 +702,34 @@ public class ProductCopyController {
 	 * 保存自定义设置
 	 * @param variables
 	 * @return
-	 * @throws ApiException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws JsonMappingException 
 	 * @throws JsonGenerationException 
 	 */
 	@RequestMapping(value="/saveAliConfig")
 	@ResponseBody 
-	public AliCopyConfig saveAliConfig(@RequestBody Map<String,Object> variables) throws ApiException, JsonGenerationException, JsonMappingException, IOException{
-		String aliconfig=JacksonJsonMapper.getInstance().writeValueAsString(variables);
+	public AliCopyConfig saveAliConfig(@RequestBody Map<String,Object> variables) throws JsonGenerationException, JsonMappingException, IOException{
+		String aliconfig= JacksonJsonMapper.getInstance().writeValueAsString(variables);
 		AliCopyConfig entity=aliCopyConfigService.saveOrUpdate(aliconfig);
 		return entity;
 	}
 	/**
 	 * 保存自定义设置
-	 * @param variables
 	 * @return
-	 * @throws ApiException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws JsonMappingException 
 	 * @throws JsonGenerationException 
 	 */
 	@RequestMapping(value="/loadAliConfig")
 	@ResponseBody 
-	public AliCopyConfig loadAliConfig() throws ApiException, JsonGenerationException, JsonMappingException, IOException{
+	public AliCopyConfig loadAliConfig() throws  JsonGenerationException, JsonMappingException, IOException{
 		AliCopyConfig entity=aliCopyConfigService.findOne();
 		return entity;
 	}
 	
 	
 	@RequestMapping(value="/customer",method=RequestMethod.GET)
-	public ModelAndView customerIndex(HttpServletRequest request,HttpServletResponse response) throws ApiException{
+	public ModelAndView customerIndex(HttpServletRequest request,HttpServletResponse response) {
 		Map<String,Object> model=new HashMap<String, Object>();
 		model.put("content", "copy/customer/cateproduct.jsp");
 		return new ModelAndView("aceadmin/index",model);
@@ -812,10 +740,9 @@ public class ProductCopyController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ApiException
 	 */
 	@RequestMapping(value = "/batchalicopy", method = RequestMethod.GET)
-     public ModelAndView batchaliocopy(HttpServletRequest request, HttpServletResponse response) throws ApiException {
+     public ModelAndView batchaliocopy(HttpServletRequest request, HttpServletResponse response){
          Map<String, Object> model = new HashMap<String, Object>();
          model.put("content", "copy/batchproduct.jsp");
          return new ModelAndView("aceadmin/index", model);

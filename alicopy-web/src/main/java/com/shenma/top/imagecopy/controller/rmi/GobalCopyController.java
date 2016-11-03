@@ -18,14 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.shenma.top.imagecopy.dao.CollectProductDao;
-import com.shenma.top.imagecopy.dao.OwnCatInfoDao;
-import com.shenma.top.imagecopy.entity.CollectProduct;
-import com.shenma.top.imagecopy.entity.OwnCatInfo;
-import com.shenma.top.imagecopy.service.GlobalService;
-import com.shenma.top.imagecopy.util.CustomObjectMapper;
-import com.shenma.top.imagecopy.util.JacksonJsonMapper;
-import com.shenma.top.imagecopy.util.JsonpUtil;
+import com.shenma.alicopy.dao.OwnCatInfoDao;
+import com.shenma.alicopy.entity.CollectProduct;
+import com.shenma.alicopy.entity.OwnCatInfo;
+import com.shenma.alicopy.service.GlobalService;
 
 @Controller
 @RequestMapping("/globalcopy/api/collectProducts")

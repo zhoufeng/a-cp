@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.shenma.top.imagecopy.util.JsonpUtil;
+import com.shenma.alicopy.util.JsonpUtil;
 
 @Controller
 @RequestMapping("/test")

@@ -1,16 +1,5 @@
 package com.bohusoft.htmlfetch.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.bohusoft.dubboapi.entity.ImageBean;
 import com.bohusoft.dubboapi.exception.DubboApiException;
 import com.bohusoft.dubboapi.exception.DubboApiExceptionEnums;
@@ -22,10 +11,20 @@ import com.shenma.aliutil.service.AlbumService;
 import com.shenma.aliutil.service.AliToken;
 import com.shenma.aliutil.util.AliConstant;
 import com.shenma.aliutil.util.SessionUtil;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 @Service
 public class AliImageHandleServiceImp implements AliImageHandleService{
 	private static final long maxSize = (2 << 16) * 30; //3m的文件大小
-	protected static Logger logger = Logger.getLogger("AliImageHandleServiceImp");
+	protected static Logger logger = Logger.getLogger(AliImageHandleServiceImp.class);
 	@Autowired
 	private AlbumService albumService;
 	

@@ -1,34 +1,24 @@
 package com.shenma.top.interceptors;
 
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.shenma.alicopy.util.BaseHttpClient;
+import com.shenma.aliutil.sdk.ali.auth.HostedAuthService;
+import com.shenma.aliutil.service.AliToken;
+import com.shenma.aliutil.service.AlibabaRequestService;
+import com.shenma.aliutil.util.AliConstant;
+import com.shenma.aliutil.util.SessionUtil;
+import com.shenma.common.util.JacksonJsonMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-
-
-
-
-
-
-import com.shenma.aliutil.sdk.ali.auth.HostedAuthService;
-import com.shenma.aliutil.service.AliToken;
-import com.shenma.aliutil.service.AlibabaRequestService;
-import com.shenma.aliutil.util.AliConstant;
-import com.shenma.aliutil.util.SessionUtil;
-import com.shenma.top.imagecopy.util.BaseHttpClient;
-import com.shenma.top.imagecopy.util.JacksonJsonMapper;
-import com.shenma.top.imagecopy.util.ProxyLocalRequestUtil;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 @Controller
@@ -52,7 +42,7 @@ public class LocalAliLoginInterceptor extends HandlerInterceptorAdapter {
 			params.put("memberId", "b2b-2135715960");
 			params.put("appKey", "1014423");
 			String tokenstr=BaseHttpClient.get("http://imagecopy.kongjishise.com/alicopy/open/api/getToken", params, "utf-8");
-			info=JacksonJsonMapper.getInstance().readValue(tokenstr, AliToken.class);
+			info= JacksonJsonMapper.getInstance().readValue(tokenstr, AliToken.class);
 			request.getSession().setAttribute(AliConstant.ali_info_name, info);
 		}else{
 			info=(AliToken) object;

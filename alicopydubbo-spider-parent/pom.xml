@@ -17,7 +17,6 @@
   <modules>
       <module>alicopydubbo-api</module>
       <module>alicopydubbo-htmlfetch-provider</module>
-      <module>alicopydubbo-aliapi-provider</module>
   </modules>
 
 
