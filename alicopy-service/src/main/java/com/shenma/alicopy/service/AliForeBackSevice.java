@@ -171,7 +171,7 @@ public class AliForeBackSevice {
 			mqRecordItemDao.saveAndFlush(mqItem);
 			ret.put("errorCode", e.getCode());
 			ret.put("errorMsg", e.getMessage());
-			logger.error(e);
+			logger.error("复制出错:url=["+url+"]",e);
 			return ret;
 		}catch (DuplicateCopyException e) {
 			mqRecordItemDao.delete(mqItem);
@@ -184,7 +184,7 @@ public class AliForeBackSevice {
 			mqRecordItemDao.saveAndFlush(mqItem);
 			ret.put("errorCode",e.getCode());
 			ret.put("errorMsg", e.getMessage());
-			logger.error(e);
+			logger.error("复制出错:url=["+url+"]",e);
 			return ret;
 		} catch (Exception e) {
 			mqItem.setStatus(2);
@@ -196,7 +196,7 @@ public class AliForeBackSevice {
 			mqRecordItemDao.saveAndFlush(mqItem);
 			ret.put("errorCode", 101);
 			ret.put("errorMsg", "服务器错误!");
-			logger.error("复制阿里巴巴地址:"+url,e);
+			logger.error("复制出错:url=["+url+"]",e);
 			return ret;
 		}
 		

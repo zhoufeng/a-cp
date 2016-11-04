@@ -719,6 +719,7 @@ public class AlibabafinalSaveService {
 		}else{
 			productFeatures.put("3939", "3"); //beginAmount的值
 		}
+		productFeatures.put("3939", "1");
 		offer.setProductFeatures(productFeatures);
 
 		//处理项链的函数
